@@ -11,4 +11,7 @@ pub use error::{
     SoundTouchError,
 };
 pub use interpolate::InterpolationAlgorithm;
-pub use soundtouch::SoundTouch;
+pub use soundtouch::{
+    SoundTouch,
+    SoundTouchPreset,
+};
