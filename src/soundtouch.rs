@@ -351,6 +351,12 @@ impl SoundTouch {
         self.td_stretch.input_buffer_frames() + self.rate_transposer.input_buffer_frames()
     }
 
+    /// Returns the number of frames currently available in the output buffer.
+    #[must_use]
+    pub const fn num_samples(&self) -> usize {
+        self.output_buffer.frames()
+    }
+
     /// Returns the active number of channels.
     #[must_use]
     pub const fn channels(&self) -> usize {
