@@ -313,7 +313,7 @@ impl BpmDetect {
             let xt = f64::from(*value - mean_x);
             let xi = i as f64 - mean_i;
             b = xt.mul_add(xi, b);
-            div += xi * xi;
+            div = xi.mul_add(xi, div);
         }
         b /= div;
 
