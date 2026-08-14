@@ -6,6 +6,8 @@ mod interpolate;
 mod peak_finder;
 mod rate_transposer;
 mod soundtouch;
+#[cfg(feature = "spectral")]
+mod spectral;
 mod td_stretch;
 
 pub use bpm_detect::{
@@ -20,4 +22,11 @@ pub use interpolate::InterpolationAlgorithm;
 pub use soundtouch::{
     SoundTouch,
     SoundTouchPreset,
+};
+#[cfg(feature = "spectral")]
+pub use spectral::{
+    SpectralPreset,
+    SpectralStretch,
+    SpectralStretchBuilder,
+    SpectralWindowShape,
 };
