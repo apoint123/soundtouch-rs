@@ -246,6 +246,11 @@ impl FifoSampleBuffer {
         Ok(())
     }
 
+    /// Reserves contiguous capacity without adding samples.
+    pub(crate) fn reserve(&mut self, frames: usize) -> Result<()> {
+        self.ensure_capacity(frames.max(self.frames_in_buffer))
+    }
+
     /// Verifies if `required_frames` fits into the contiguous space at the tail
     fn ensure_capacity(&mut self, required_frames: usize) -> Result<()> {
         if required_frames > self.max_frame_limit {

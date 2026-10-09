@@ -94,11 +94,23 @@ impl PhaseVocoder {
             energy: vec![0.0; bands],
             smoothed_energy: vec![0.0; bands],
             smooth_energy_state: 0.0,
-            peaks: Vec::with_capacity(bands / 2),
+            peaks: Vec::with_capacity(bands),
             rot_table: Vec::with_capacity(bands),
             cached_interval_samples: 0,
             cached_fft_samples: 0,
         }
+    }
+
+    /// Clears stream history while retaining parameters and allocated scratch space.
+    pub fn clear(&mut self) {
+        self.prng = Xorshift32::default();
+        self.channel_bands.fill(Band::default());
+        self.output_map.fill(PitchMapPoint::default());
+        self.channel_predictions.fill(Prediction::default());
+        self.energy.fill(0.0);
+        self.smoothed_energy.fill(0.0);
+        self.smooth_energy_state = 0.0;
+        self.peaks.clear();
     }
 
     pub fn set_transpose_factor(&mut self, multiplier: f32) {

@@ -244,6 +244,33 @@ impl SpectralStretch {
         self.sample_rate
     }
 
+    /// Analysis/synthesis window length, in frames per channel.
+    #[must_use]
+    pub const fn window_frames(&self) -> usize {
+        self.block_samples
+    }
+
+    /// Number of output frames produced by one analysis step.
+    #[must_use]
+    pub const fn hop_frames(&self) -> usize {
+        self.interval_samples
+    }
+
+    /// Additional input needed to run the next analysis step.
+    #[must_use]
+    pub const fn input_frames_needed(&self) -> usize {
+        (self.block_samples + self.interval_samples).saturating_sub(self.input_buffer.frames())
+    }
+
+    /// Preallocates both FIFOs without processing or discarding audio.
+    ///
+    /// Call before entering a realtime thread, with the maximum queued input and
+    /// output frame counts the caller will allow.
+    pub fn reserve(&mut self, input_frames: usize, output_frames: usize) -> Result<()> {
+        self.input_buffer.reserve(input_frames)?;
+        self.output_buffer.reserve(output_frames)
+    }
+
     /// Dynamically sets the time-stretching tempo factor.
     pub const fn set_tempo(&mut self, tempo: f64) {
         self.tempo = tempo.clamp(0.1, 10.0);
@@ -296,6 +323,7 @@ impl SpectralStretch {
         self.last_input_hop = 0;
         self.accumulated_input_pos = 0.0;
         self.consumed_input_frames = 0;
+        self.vocoder.clear();
         Ok(())
     }
 
